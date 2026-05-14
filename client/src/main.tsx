@@ -1,8 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
 import { RouterProvider } from "@tanstack/react-router";
-import { router } from "./lib/router";
+import { router } from "@/lib/router";
+import { Provider } from "@/components/ui/provider";
 
 declare module "@tanstack/react-router" {
   interface Register {
@@ -12,6 +12,8 @@ declare module "@tanstack/react-router" {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <Provider>
+      <RouterProvider router={router} />
+    </Provider>
   </StrictMode>,
 );
