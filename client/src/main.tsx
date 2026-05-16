@@ -1,8 +1,9 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import { RouterProvider } from "@tanstack/react-router";
-import { router } from "@/lib/router";
-import { Provider } from "@/components/ui/provider";
+import { router } from "./lib/router";
+import { TooltipProvider } from "./components/ui/tooltip";
+import "./index.css";
 
 declare module "@tanstack/react-router" {
   interface Register {
@@ -12,8 +13,8 @@ declare module "@tanstack/react-router" {
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <Provider>
+    <TooltipProvider>
       <RouterProvider router={router} />
-    </Provider>
+    </TooltipProvider>
   </StrictMode>,
 );

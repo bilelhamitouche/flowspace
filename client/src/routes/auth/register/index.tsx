@@ -5,5 +5,5 @@ export const Route = createFileRoute("/auth/register/")({
 });
 
 function RouteComponent() {
-  return <div className="w-full h-full">Hello World</div>;
+  return <div></div>;
 }
