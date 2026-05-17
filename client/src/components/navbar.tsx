@@ -19,6 +19,11 @@ export default function Navbar() {
           </Link>
         </NavigationMenuLink>
         <NavigationMenuLink asChild>
+          <Link to="/" hash="faq">
+            FAQs
+          </Link>
+        </NavigationMenuLink>
+        <NavigationMenuLink asChild>
           <Link to="/" hash="contact">
             Contact
           </Link>
