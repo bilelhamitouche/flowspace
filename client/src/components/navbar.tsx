@@ -6,19 +6,19 @@ import MobileMenu from "./mobile-menu";
 export default function Navbar() {
   return (
     <header className="container flex justify-between items-center p-4 mx-auto max-w-7xl">
-      <h1 className="text-2xl font-medium">Flowspace</h1>
+      <img src="/flowspace-logo.png" alt="Logo image" width="120" />
       <NavigationMenu className="hidden gap-2 font-medium md:flex">
-        <NavigationMenuLink className="py-2.5" asChild>
+        <NavigationMenuLink asChild>
           <Link to="/" hash="features">
             Features
           </Link>
         </NavigationMenuLink>
-        <NavigationMenuLink className="py-2.5" asChild>
+        <NavigationMenuLink asChild>
           <Link to="/" hash="pricing">
             Pricing
           </Link>
         </NavigationMenuLink>
-        <NavigationMenuLink className="py-2.5" asChild>
+        <NavigationMenuLink asChild>
           <Link to="/" hash="contact">
             Contact
           </Link>
