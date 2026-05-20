@@ -29,7 +29,7 @@ export default function MobileMenu() {
             </Link>
           </Button>
           <Button variant="ghost" asChild>
-            <Link to="/" hash="faq">
+            <Link to="/" hash="faqs">
               FAQs
             </Link>
           </Button>
