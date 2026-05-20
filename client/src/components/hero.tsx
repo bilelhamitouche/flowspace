@@ -5,7 +5,7 @@ export default function Hero() {
   return (
     <section className="container flex flex-col gap-20 items-center p-8 py-20 mx-auto max-w-7xl">
       <div className="flex flex-col gap-6 items-center">
-        <h2 className="flex flex-col gap-4 text-4xl font-bold text-center md:text-5xl lg:text-6xl text-primary">
+        <h2 className="flex flex-col gap-2 text-4xl font-bold text-center md:gap-3 md:text-5xl lg:gap-4 lg:text-6xl text-primary">
           <span>Manage Your Projects</span>
           <span> and Stay Organized</span>
         </h2>
@@ -22,7 +22,7 @@ export default function Hero() {
           </Button>
         </div>
       </div>
-      <div className="w-full max-w-5xl border border-muted/80">
+      <div className="w-full max-w-5xl border border-muted/80 perspective-near">
         <img src="/preview.png" alt="preview image" />
       </div>
     </section>
