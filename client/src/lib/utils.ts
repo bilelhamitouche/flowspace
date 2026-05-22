@@ -29,7 +29,10 @@ export const apiFetch = async (path: string, options?: RequestInit) => {
     }
   }
 
-  if (!res.ok) throw new Error(await res.text());
   const text = await res.text();
-  return text ? JSON.parse(text) : null;
+  const data = text ? JSON.parse(text) : null;
+
+  if (!res.ok) throw new Error(data?.message || "Something went wrong");
+
+  return data;
 };
