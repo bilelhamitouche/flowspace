@@ -1,10 +1,13 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import * as schema from '../database/schema';
 import { eq } from 'drizzle-orm';
 import { DATABASE_CONNECTION } from 'src/database/database-connection';
+import { dbExecute } from 'src/common/utils';
+import * as bcrypt from 'bcrypt';
+import { SALT_ROUNDS } from 'src/common/constants/constants';
 
 @Injectable()
 export class UsersService {
@@ -14,36 +17,91 @@ export class UsersService {
   ) {}
 
   async create(createUserDto: CreateUserDto) {
-    const user = await this.database
-      .insert(schema.users)
-      .values(createUserDto)
-      .returning();
-    return user;
+    const hashedPassword = await bcrypt.hash(
+      createUserDto.password,
+      SALT_ROUNDS,
+    );
+    const user = await dbExecute(
+      this.database
+        .insert(schema.users)
+        .values({ ...createUserDto, password: hashedPassword })
+        .returning(),
+      'Failed to create user',
+    );
+    return user[0];
   }
 
   async findAll() {
-    const users = await this.database.select().from(schema.users);
+    const users = await dbExecute(
+      this.database
+        .select({
+          id: schema.users.id,
+          name: schema.users.name,
+          email: schema.users.email,
+          role: schema.users.role,
+          avatarUrl: schema.users.avatarUrl,
+          createdAt: schema.users.createdAt,
+          updatedAt: schema.users.updatedAt,
+        })
+        .from(schema.users),
+      'Failed to fetch users',
+    );
     return users;
   }
 
   async findById(id: string) {
-    const user = await this.database
-      .select()
-      .from(schema.users)
-      .where(eq(schema.users.id, id));
-    return user;
+    const user = await dbExecute(
+      this.database
+        .select({
+          id: schema.users.id,
+          name: schema.users.name,
+          email: schema.users.email,
+          role: schema.users.role,
+          avatarUrl: schema.users.avatarUrl,
+          refreshToken: schema.users.refreshToken,
+          createdAt: schema.users.createdAt,
+          updatedAt: schema.users.updatedAt,
+        })
+        .from(schema.users)
+        .where(eq(schema.users.id, id)),
+      'Failed to find user',
+    );
+    if (!user) {
+      throw new NotFoundException();
+    }
+    return user[0];
+  }
+
+  async findByEmail(email: string) {
+    const user = await dbExecute(
+      this.database
+        .select()
+        .from(schema.users)
+        .where(eq(schema.users.email, email)),
+      'Invalid credentials',
+    );
+    if (!user) {
+      throw new NotFoundException();
+    }
+    return user[0];
   }
 
   async update(id: string, updateUserDto: UpdateUserDto) {
-    const updatedUser = await this.database
-      .update(schema.users)
-      .set(updateUserDto)
-      .where(eq(schema.users.id, id))
-      .returning();
-    return updatedUser;
+    const updatedUser = await dbExecute(
+      this.database
+        .update(schema.users)
+        .set(updateUserDto)
+        .where(eq(schema.users.id, id))
+        .returning(),
+      'Failed to update user',
+    );
+    return updatedUser[0];
   }
 
   async remove(id: string) {
-    await this.database.delete(schema.users).where(eq(schema.users.id, id));
+    await dbExecute(
+      this.database.delete(schema.users).where(eq(schema.users.id, id)),
+      'Failed to delete user',
+    );
   }
 }

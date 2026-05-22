@@ -1,10 +1,119 @@
-import { Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Res,
+  UnauthorizedException,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { RegisterDto } from './dto/register.dto';
+import * as schema from '../database/schema';
+import type { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
+import { CurrentUser } from 'src/common/decorators/current-user-decorator';
+import { JwtAuthGuard } from './guards/jwt.guard';
+import { LocalAuthGuard } from './guards/local.guard';
+import { JwtRefreshAuthGuard } from './guards/jwt-refresh.guard';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {}
+  constructor(
+    private authService: AuthService,
+    private configService: ConfigService,
+  ) {}
 
-  @Post('/login')
-  async login() {}
+  @Post('register')
+  @HttpCode(HttpStatus.OK)
+  async register(
+    @Body() registerDto: RegisterDto,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const tokens = await this.authService.register(registerDto);
+    response.cookie('Authentication', tokens.accessToken, {
+      httpOnly: true,
+      secure: this.configService.get('NODE_ENV') === 'production',
+      expires: new Date(Date.now() + Number(tokens.expiresAccessToken)),
+      sameSite: 'none',
+      partitioned: true,
+    });
+    response.cookie('Refresh', tokens.refreshToken, {
+      httpOnly: true,
+      secure: this.configService.get('NODE_ENV') === 'production',
+      expires: new Date(Date.now() + Number(tokens.expiresRefreshToken)),
+      sameSite: 'none',
+      partitioned: true,
+    });
+  }
+
+  @UseGuards(LocalAuthGuard)
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  async login(
+    @CurrentUser() user: typeof schema.users.$inferSelect,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const tokens = await this.authService.login(user);
+    response.cookie('Authentication', tokens.accessToken, {
+      httpOnly: true,
+      secure: this.configService.get('NODE_ENV') === 'production',
+      expires: new Date(Date.now() + Number(tokens.expiresAccessToken)),
+      sameSite: 'none',
+      partitioned: true,
+    });
+    response.cookie('Refresh', tokens.refreshToken, {
+      httpOnly: true,
+      secure: this.configService.get('NODE_ENV') === 'production',
+      expires: new Date(Date.now() + Number(tokens.expiresRefreshToken)),
+      sameSite: 'none',
+      partitioned: true,
+    });
+  }
+
+  @UseGuards(JwtRefreshAuthGuard)
+  @Post('logout')
+  @HttpCode(HttpStatus.OK)
+  async logout(
+    @CurrentUser() user: typeof schema.users.$inferSelect,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    await this.authService.logout(user.id);
+    response.clearCookie('Authentication');
+    response.clearCookie('Refresh');
+  }
+
+  @UseGuards(JwtRefreshAuthGuard)
+  @Post('refresh')
+  async refreshToken(
+    @CurrentUser() user: typeof schema.users.$inferSelect,
+    @Res({ passthrough: true }) response: Response,
+  ) {
+    const tokens = await this.authService.login(user);
+    response.cookie('Authentication', tokens.accessToken, {
+      httpOnly: true,
+      secure: this.configService.get('NODE_ENV') === 'production',
+      expires: new Date(Date.now() + Number(tokens.expiresAccessToken)),
+      sameSite: 'none',
+      partitioned: true,
+    });
+    response.cookie('Refresh', tokens.refreshToken, {
+      httpOnly: true,
+      secure: this.configService.get('NODE_ENV') === 'production',
+      expires: new Date(Date.now() + Number(tokens.expiresRefreshToken)),
+      sameSite: 'none',
+      partitioned: true,
+    });
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('me')
+  @HttpCode(HttpStatus.OK)
+  async getCurrentUser(@CurrentUser() user: typeof schema.users.$inferSelect) {
+    if (!user) throw new UnauthorizedException();
+    const { password, refreshToken, ...safeUser } = user;
+    return safeUser;
+  }
 }
