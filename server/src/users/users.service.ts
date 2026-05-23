@@ -78,7 +78,7 @@ export class UsersService {
         .select()
         .from(schema.users)
         .where(eq(schema.users.email, email)),
-      'Invalid credentials',
+      'Failed to find user',
     );
     if (!user) {
       throw new NotFoundException();
