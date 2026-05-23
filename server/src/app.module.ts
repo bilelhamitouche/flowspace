@@ -4,6 +4,10 @@ import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
+import { WorkspacesModule } from './workspaces/workspaces.module';
+import { BoardsModule } from './boards/boards.module';
+import { TasksModule } from './tasks/tasks.module';
+import { ListsModule } from './lists/lists.module';
 
 @Module({
   imports: [
@@ -12,8 +16,11 @@ import { JwtModule } from '@nestjs/jwt';
     DatabaseModule,
     UsersModule,
     AuthModule,
+    WorkspacesModule,
+    BoardsModule,
+    TasksModule,
+    ListsModule,
   ],
-  controllers: [],
   providers: [],
 })
 export class AppModule {}

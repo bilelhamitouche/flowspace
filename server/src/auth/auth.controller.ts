@@ -27,55 +27,57 @@ export class AuthController {
   ) {}
 
   @Post('register')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   async register(
     @Body() registerDto: RegisterDto,
     @Res({ passthrough: true }) response: Response,
   ) {
+    const isProd = this.configService.get('NODE_ENV') === 'production';
     const tokens = await this.authService.register(registerDto);
     response.cookie('Authentication', tokens.accessToken, {
       httpOnly: true,
-      secure: this.configService.get('NODE_ENV') === 'production',
+      secure: isProd,
       expires: new Date(Date.now() + Number(tokens.expiresAccessToken)),
-      sameSite: 'none',
-      partitioned: true,
+      sameSite: isProd ? 'none' : 'lax',
+      partitioned: isProd,
     });
     response.cookie('Refresh', tokens.refreshToken, {
       httpOnly: true,
-      secure: this.configService.get('NODE_ENV') === 'production',
+      secure: isProd,
       expires: new Date(Date.now() + Number(tokens.expiresRefreshToken)),
-      sameSite: 'none',
-      partitioned: true,
+      sameSite: isProd ? 'none' : 'lax',
+      partitioned: isProd,
     });
   }
 
   @UseGuards(LocalAuthGuard)
   @Post('login')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   async login(
     @CurrentUser() user: typeof schema.users.$inferSelect,
     @Res({ passthrough: true }) response: Response,
   ) {
+    const isProd = this.configService.get('NODE_ENV') === 'production';
     const tokens = await this.authService.login(user);
     response.cookie('Authentication', tokens.accessToken, {
       httpOnly: true,
-      secure: this.configService.get('NODE_ENV') === 'production',
+      secure: isProd,
       expires: new Date(Date.now() + Number(tokens.expiresAccessToken)),
-      sameSite: 'none',
-      partitioned: true,
+      sameSite: isProd ? 'none' : 'lax',
+      partitioned: isProd,
     });
     response.cookie('Refresh', tokens.refreshToken, {
       httpOnly: true,
-      secure: this.configService.get('NODE_ENV') === 'production',
+      secure: isProd,
       expires: new Date(Date.now() + Number(tokens.expiresRefreshToken)),
-      sameSite: 'none',
-      partitioned: true,
+      sameSite: isProd ? 'none' : 'lax',
+      partitioned: isProd,
     });
   }
 
   @UseGuards(JwtRefreshAuthGuard)
   @Post('logout')
-  @HttpCode(HttpStatus.OK)
+  @HttpCode(HttpStatus.CREATED)
   async logout(
     @CurrentUser() user: typeof schema.users.$inferSelect,
     @Res({ passthrough: true }) response: Response,
@@ -87,24 +89,26 @@ export class AuthController {
 
   @UseGuards(JwtRefreshAuthGuard)
   @Post('refresh')
+  @HttpCode(HttpStatus.CREATED)
   async refreshToken(
     @CurrentUser() user: typeof schema.users.$inferSelect,
     @Res({ passthrough: true }) response: Response,
   ) {
+    const isProd = this.configService.get('NODE_ENV') === 'production';
     const tokens = await this.authService.login(user);
     response.cookie('Authentication', tokens.accessToken, {
       httpOnly: true,
-      secure: this.configService.get('NODE_ENV') === 'production',
+      secure: isProd,
       expires: new Date(Date.now() + Number(tokens.expiresAccessToken)),
-      sameSite: 'none',
-      partitioned: true,
+      sameSite: isProd ? 'none' : 'lax',
+      partitioned: isProd,
     });
     response.cookie('Refresh', tokens.refreshToken, {
       httpOnly: true,
-      secure: this.configService.get('NODE_ENV') === 'production',
+      secure: isProd,
       expires: new Date(Date.now() + Number(tokens.expiresRefreshToken)),
-      sameSite: 'none',
-      partitioned: true,
+      sameSite: isProd ? 'none' : 'lax',
+      partitioned: isProd,
     });
   }
 
