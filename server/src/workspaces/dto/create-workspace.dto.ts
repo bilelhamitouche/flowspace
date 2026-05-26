@@ -1,1 +1,6 @@
-export class CreateWorkspaceDto {}
+import { IsString } from 'class-validator';
+
+export class CreateWorkspaceDto {
+  @IsString()
+  name: string;
+}

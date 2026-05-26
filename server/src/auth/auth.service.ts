@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
@@ -11,11 +12,17 @@ import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as schema from '../database/schema';
 import { SALT_ROUNDS } from 'src/common/constants/constants';
+import { DATABASE_CONNECTION } from 'src/database/database-connection';
+import { NodePgDatabase } from 'drizzle-orm/node-postgres';
+import { WorkspacesService } from 'src/workspaces/workspaces.service';
 
 @Injectable()
 export class AuthService {
   constructor(
+    @Inject(DATABASE_CONNECTION)
+    private database: NodePgDatabase<typeof schema>,
     private usersService: UsersService,
+    private workspacesService: WorkspacesService,
     private configService: ConfigService,
     private jwtService: JwtService,
   ) {}
@@ -66,7 +73,15 @@ export class AuthService {
     if (user) {
       throw new ConflictException('User with this email already exists');
     }
-    const newUser = await this.usersService.create(registerDto);
+    const newUser = await this.database.transaction(async (tx) => {
+      const user = await this.usersService.create(registerDto, tx);
+      await this.workspacesService.create(
+        user.id,
+        { name: 'Default Workspace' },
+        tx,
+      );
+      return user;
+    });
     const tokens = await this.login(newUser);
     return tokens;
   }

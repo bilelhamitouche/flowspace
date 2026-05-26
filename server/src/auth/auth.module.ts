@@ -7,9 +7,10 @@ import { DatabaseModule } from 'src/database/database.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtRefreshStrategy } from './strategies/jwt-refresh.strategy';
+import { WorkspacesModule } from 'src/workspaces/workspaces.module';
 
 @Module({
-  imports: [UsersModule, PassportModule, DatabaseModule],
+  imports: [UsersModule, PassportModule, DatabaseModule, WorkspacesModule],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, JwtRefreshStrategy, LocalStrategy],
 })

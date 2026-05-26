@@ -16,13 +16,13 @@ export class UsersService {
     private database: NodePgDatabase<typeof schema>,
   ) {}
 
-  async create(createUserDto: CreateUserDto) {
+  async create(createUserDto: CreateUserDto, db = this.database) {
     const hashedPassword = await bcrypt.hash(
       createUserDto.password,
       SALT_ROUNDS,
     );
     const user = await dbExecute(
-      this.database
+      db
         .insert(schema.users)
         .values({ ...createUserDto, password: hashedPassword })
         .returning(),
@@ -31,9 +31,9 @@ export class UsersService {
     return user[0];
   }
 
-  async findAll() {
+  async findAll(db = this.database) {
     const users = await dbExecute(
-      this.database
+      db
         .select({
           id: schema.users.id,
           name: schema.users.name,
@@ -49,9 +49,9 @@ export class UsersService {
     return users;
   }
 
-  async findById(id: string) {
+  async findById(id: string, db = this.database) {
     const user = await dbExecute(
-      this.database
+      db
         .select({
           id: schema.users.id,
           name: schema.users.name,
@@ -72,12 +72,9 @@ export class UsersService {
     return user[0];
   }
 
-  async findByEmail(email: string) {
+  async findByEmail(email: string, db = this.database) {
     const user = await dbExecute(
-      this.database
-        .select()
-        .from(schema.users)
-        .where(eq(schema.users.email, email)),
+      db.select().from(schema.users).where(eq(schema.users.email, email)),
       'Failed to find user',
     );
     if (!user) {
@@ -86,9 +83,9 @@ export class UsersService {
     return user[0];
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
+  async update(id: string, updateUserDto: UpdateUserDto, db = this.database) {
     const updatedUser = await dbExecute(
-      this.database
+      db
         .update(schema.users)
         .set(updateUserDto)
         .where(eq(schema.users.id, id))
@@ -98,9 +95,9 @@ export class UsersService {
     return updatedUser[0];
   }
 
-  async remove(id: string) {
+  async remove(id: string, db = this.database) {
     await dbExecute(
-      this.database.delete(schema.users).where(eq(schema.users.id, id)),
+      db.delete(schema.users).where(eq(schema.users.id, id)),
       'Failed to delete user',
     );
   }
