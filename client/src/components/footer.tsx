@@ -31,7 +31,7 @@ export default function Footer() {
           </NavigationMenuLink>
         </NavigationMenu>
       </div>
-      <div className="flex gap-8 justify-between items-center p-8 w-full">
+      <div className="flex flex-col gap-4 justify-between items-center p-8 w-full md:flex-row">
         <p className="text-foreground/70">
           Copyright &copy; Flowspace {new Date().getFullYear()}
         </p>
