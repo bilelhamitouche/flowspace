@@ -15,11 +15,13 @@ export const useLoginMutation = () =>
         },
         body: JSON.stringify(data),
       }),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
+    onSuccess: async () => {
+      await queryClient.refetchQueries({
         queryKey: ["me"],
+        exact: true,
       });
-      router.navigate({ to: "/workspaces" });
+      await router.invalidate();
+      await router.navigate({ to: "/workspaces" });
     },
     onError: (err) => {
       toast.error(err.message);
@@ -29,20 +31,40 @@ export const useLoginMutation = () =>
 export const useRegisterMutation = () =>
   useMutation({
     mutationKey: ["register"],
-    mutationFn: async (data: RegisterData) => {
+    mutationFn: async (data: RegisterData) =>
       apiFetch("/api/auth/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(data),
-      });
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({
+      }),
+    onSuccess: async () => {
+      await queryClient.refetchQueries({
         queryKey: ["me"],
+        exact: true,
       });
-      router.navigate({ to: "/workspaces" });
+      await router.invalidate();
+      await router.navigate({ to: "/workspaces" });
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    },
+  });
+
+export const useLogoutMutation = () =>
+  useMutation({
+    mutationKey: ["logout"],
+    mutationFn: async () =>
+      apiFetch("/api/auth/logout", {
+        method: "POST",
+      }),
+    onSuccess: async () => {
+      await queryClient.refetchQueries({
+        queryKey: ["me"],
+        exact: true,
+      });
+      await router.invalidate();
     },
     onError: (err) => {
       toast.error(err.message);

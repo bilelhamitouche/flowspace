@@ -7,15 +7,12 @@ import Pricing from "@/components/pricing";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
-  beforeLoad: ({ context }) => {
+  component: RouteComponent,
+  beforeLoad: async ({ context }) => {
     if (context.authStatus === "Authenticated") {
       throw redirect({ to: "/workspaces" });
     }
-    if (context.authStatus === "Unauthenticated") {
-      throw redirect({ to: "/" });
-    }
   },
-  component: RouteComponent,
 });
 
 function RouteComponent() {
