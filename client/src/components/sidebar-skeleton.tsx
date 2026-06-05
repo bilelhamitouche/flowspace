@@ -8,6 +8,7 @@ import {
   SidebarMenuSkeleton,
 } from "./ui/sidebar";
 import { Skeleton } from "./ui/skeleton";
+import UserAvatarSkeleton from "./user-avatar-skeleton";
 
 export default function SidebarSkeleton() {
   return (
@@ -25,13 +26,7 @@ export default function SidebarSkeleton() {
         </SidebarMenu>
       </SidebarContent>
       <SidebarFooter>
-        <div className="flex gap-4 items-center p-2 w-full">
-          <Skeleton className="w-12 h-10 rounded-full" />
-          <div className="flex flex-col gap-2 items-start w-full">
-            <Skeleton className="w-full h-4 rounded-full" />
-            <Skeleton className="w-full h-4 rounded-full" />
-          </div>
-        </div>
+        <UserAvatarSkeleton />
       </SidebarFooter>
     </Sidebar>
   );
