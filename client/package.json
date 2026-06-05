@@ -10,6 +10,8 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@dnd-kit/helpers": "^0.4.0",
+    "@dnd-kit/react": "^0.4.0",
     "@fontsource-variable/dm-sans": "^5.2.8",
     "@fontsource-variable/raleway": "^5.2.8",
     "@tailwindcss/vite": "^4.3.0",
