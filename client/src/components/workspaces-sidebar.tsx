@@ -1,4 +1,4 @@
-import { Link, useParams } from "@tanstack/react-router";
+import { Link, useMatches, useParams } from "@tanstack/react-router";
 import {
   Sidebar,
   SidebarContent,
@@ -43,7 +43,7 @@ export default function WorkspacesSidebar() {
                 params={{ workspaceId: params.workspaceId }}
               >
                 <Home />
-                Home
+                Dashboard
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
