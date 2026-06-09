@@ -10,3 +10,12 @@ export interface Task {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface CreateTaskData {
+  title: string;
+  description: string;
+  position: number;
+  dueDate: Date;
+  listId: string;
+  assignedTo: string;
+}

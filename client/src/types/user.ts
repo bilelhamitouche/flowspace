@@ -4,6 +4,7 @@ export interface User {
   email: string;
   role: "Admin" | "User";
   avatarUrl: string | null;
+  activeWorkspaceId: string;
   createdAt: Date;
   updatedAt: Date;
 }

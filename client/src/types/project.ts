@@ -5,3 +5,8 @@ export interface Project {
   createdAt: Date;
   updatedAt: Date;
 }
+
+export interface CreateProjectData {
+  name: string;
+  workspaceId: string;
+}
