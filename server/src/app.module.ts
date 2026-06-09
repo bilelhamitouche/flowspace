@@ -5,7 +5,7 @@ import { DatabaseModule } from './database/database.module';
 import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { WorkspacesModule } from './workspaces/workspaces.module';
-import { BoardsModule } from './boards/boards.module';
+import { ProjectsModule } from './projects/projects.module';
 import { TasksModule } from './tasks/tasks.module';
 import { ListsModule } from './lists/lists.module';
 
@@ -17,7 +17,7 @@ import { ListsModule } from './lists/lists.module';
     UsersModule,
     AuthModule,
     WorkspacesModule,
-    BoardsModule,
+    ProjectsModule,
     TasksModule,
     ListsModule,
   ],

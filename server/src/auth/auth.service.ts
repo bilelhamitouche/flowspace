@@ -75,12 +75,20 @@ export class AuthService {
     }
     const newUser = await this.database.transaction(async (tx) => {
       const user = await this.usersService.create(registerDto, tx);
-      await this.workspacesService.create(
+      const workspace = await this.workspacesService.create(
         user.id,
         { name: 'Default Workspace' },
         tx,
       );
-      return user;
+      const [updatedUser, _] = await Promise.all([
+        this.usersService.update(
+          user.id,
+          { activeWorkspaceId: workspace.id },
+          tx,
+        ),
+        this.workspacesService.addMember(user.id, workspace.id, tx),
+      ]);
+      return updatedUser;
     });
     const tokens = await this.login(newUser);
     return tokens;
@@ -112,7 +120,7 @@ export class AuthService {
   async verifyRefreshToken(refreshToken: string, userId: string) {
     const user = await this.usersService.findById(userId);
     const isMatch =
-      user.refreshToken &&
+      user?.refreshToken &&
       (await bcrypt.compare(refreshToken, user.refreshToken));
     if (!isMatch) {
       throw new UnauthorizedException('Refresh Token is not valid');

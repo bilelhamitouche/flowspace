@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class CreateBoardDto {
+export class CreateProjectDto {
   @IsNotEmpty()
   @IsString()
   title: string;

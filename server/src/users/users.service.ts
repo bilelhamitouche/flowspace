@@ -21,14 +21,14 @@ export class UsersService {
       createUserDto.password,
       SALT_ROUNDS,
     );
-    const user = await dbExecute(
+    const [{ ...user }] = await dbExecute(
       db
         .insert(schema.users)
         .values({ ...createUserDto, password: hashedPassword })
         .returning(),
       'Failed to create user',
     );
-    return user[0];
+    return user;
   }
 
   async findAll(db = this.database) {
@@ -40,6 +40,7 @@ export class UsersService {
           email: schema.users.email,
           role: schema.users.role,
           avatarUrl: schema.users.avatarUrl,
+          activeWorkspaceId: schema.users.activeWorkspaceId,
           createdAt: schema.users.createdAt,
           updatedAt: schema.users.updatedAt,
         })
@@ -50,7 +51,7 @@ export class UsersService {
   }
 
   async findById(id: string, db = this.database) {
-    const user = await dbExecute(
+    const [{ ...user }] = await dbExecute(
       db
         .select({
           id: schema.users.id,
@@ -58,6 +59,7 @@ export class UsersService {
           email: schema.users.email,
           role: schema.users.role,
           avatarUrl: schema.users.avatarUrl,
+          activeWorkspaceId: schema.users.activeWorkspaceId,
           refreshToken: schema.users.refreshToken,
           createdAt: schema.users.createdAt,
           updatedAt: schema.users.updatedAt,
@@ -69,7 +71,7 @@ export class UsersService {
     if (!user) {
       throw new NotFoundException();
     }
-    return user[0];
+    return user;
   }
 
   async findByEmail(email: string, db = this.database) {
@@ -83,8 +85,22 @@ export class UsersService {
     return user[0];
   }
 
+  async findActiveWorkspaceId(id: string, db = this.database) {
+    const [{ activeWorkspaceId }] = await dbExecute(
+      db
+        .select({ activeWorkspaceId: schema.users.activeWorkspaceId })
+        .from(schema.users)
+        .where(eq(schema.users.id, id)),
+      'Failed to find active workspace',
+    );
+    if (!activeWorkspaceId) {
+      throw new NotFoundException();
+    }
+    return activeWorkspaceId;
+  }
+
   async update(id: string, updateUserDto: UpdateUserDto, db = this.database) {
-    const updatedUser = await dbExecute(
+    const [{ ...updatedUser }] = await dbExecute(
       db
         .update(schema.users)
         .set(updateUserDto)
@@ -92,7 +108,7 @@ export class UsersService {
         .returning(),
       'Failed to update user',
     );
-    return updatedUser[0];
+    return updatedUser;
   }
 
   async remove(id: string, db = this.database) {

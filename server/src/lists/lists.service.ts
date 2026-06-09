@@ -15,18 +15,18 @@ export class ListsService {
   ) {}
 
   async create(
-    boardId: string,
+    projectId: string,
     createListDto: CreateListDto,
     db = this.database,
   ) {
-    const list = await dbExecute(
+    const [{ ...list }] = await dbExecute(
       db
         .insert(schema.lists)
-        .values({ boardId, ...createListDto })
+        .values({ projectId, ...createListDto })
         .returning(),
       'Failed to create list',
     );
-    return list[0];
+    return list;
   }
 
   async findAll(db = this.database) {
@@ -38,15 +38,15 @@ export class ListsService {
   }
 
   async findById(id: string, db = this.database) {
-    const list = await dbExecute(
+    const [{ ...list }] = await dbExecute(
       db.select().from(schema.lists).where(eq(schema.lists.id, id)),
       'Failed to fetch list',
     );
-    return list[0];
+    return list;
   }
 
   async update(id: string, updateListDto: UpdateListDto, db = this.database) {
-    const list = await dbExecute(
+    const [{ ...list }] = await dbExecute(
       db
         .update(schema.lists)
         .set(updateListDto)
@@ -54,7 +54,7 @@ export class ListsService {
         .returning(),
       'Failed to update list',
     );
-    return list[0];
+    return list;
   }
 
   async remove(id: string, db = this.database) {

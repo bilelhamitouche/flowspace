@@ -2,4 +2,4 @@ import { pgEnum } from 'drizzle-orm/pg-core';
 
 export const userRole = pgEnum('user_role', ['Admin', 'User']);
 
-export const memberRole = pgEnum('member_role', ['Owner', 'Admin', 'Member']);
+export const memberRole = pgEnum('member_role', ['Owner', 'Member']);

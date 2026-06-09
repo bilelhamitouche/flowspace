@@ -20,14 +20,14 @@ export class TasksService {
     createTaskDto: CreateTaskDto,
     db = this.database,
   ) {
-    const task = dbExecute(
+    const [{ ...task }] = await dbExecute(
       db
         .insert(schema.tasks)
         .values({ createdBy, listId, ...createTaskDto })
         .returning(),
       'Failed to create task',
     );
-    return task[0];
+    return task;
   }
 
   async findAll(db = this.database) {
@@ -47,11 +47,15 @@ export class TasksService {
   }
 
   async update(id: string, updateTaskDto: UpdateTaskDto, db = this.database) {
-    const updatedTask = dbExecute(
-      db.update(schema.tasks).set(updateTaskDto).where(eq(schema.tasks.id, id)),
+    const [{ ...updatedTask }] = await dbExecute(
+      db
+        .update(schema.tasks)
+        .set(updateTaskDto)
+        .where(eq(schema.tasks.id, id))
+        .returning(),
       'Failed to update task',
     );
-    return updatedTask[0];
+    return updatedTask;
   }
 
   async remove(id: string, db = this.database) {

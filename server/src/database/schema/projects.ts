@@ -3,7 +3,7 @@ import { uuid } from 'drizzle-orm/pg-core';
 import { pgTable } from 'drizzle-orm/pg-core';
 import { workspaces } from './workspaces';
 
-export const boards = pgTable('boards', {
+export const projects = pgTable('projects', {
   id: uuid('id').primaryKey().defaultRandom(),
   title: text('title').notNull(),
   workspaceId: uuid('workspace_id')

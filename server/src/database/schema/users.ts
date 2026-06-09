@@ -3,6 +3,7 @@ import { timestamp } from 'drizzle-orm/pg-core';
 import { uuid } from 'drizzle-orm/pg-core';
 import { pgTable } from 'drizzle-orm/pg-core';
 import { userRole } from './enums';
+import { workspaces } from './workspaces';
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -12,6 +13,10 @@ export const users = pgTable('users', {
   role: userRole('role').notNull().default('User'),
   avatarUrl: text('avatar_url'),
   refreshToken: text('refresh_token'),
+  activeWorkspaceId: uuid('active_workspace_id').references(
+    () => workspaces.id,
+    { onDelete: 'set null' },
+  ),
   createdAt: timestamp('created_at', { withTimezone: true })
     .notNull()
     .defaultNow(),

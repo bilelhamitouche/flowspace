@@ -42,6 +42,13 @@ export class UsersController {
 
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
+  @Get(':id/active-workspace')
+  async getActiveWorkspace(@Param('id') id: string) {
+    return this.usersService.findActiveWorkspaceId(id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
   @Patch(':id')
   async updateUser(
     @Param('id') id: string,

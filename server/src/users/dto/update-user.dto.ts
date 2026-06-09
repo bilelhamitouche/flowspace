@@ -9,4 +9,7 @@ export class UpdateUserDto extends PartialType(CreateUserDto) {
 
   @IsOptional()
   refreshToken?: string | null;
+
+  @IsOptional()
+  activeWorkspaceId?: string | null;
 }

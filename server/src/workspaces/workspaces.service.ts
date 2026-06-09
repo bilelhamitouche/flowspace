@@ -5,7 +5,7 @@ import { dbExecute } from 'src/common/utils';
 import { NodePgDatabase } from 'drizzle-orm/node-postgres';
 import { DATABASE_CONNECTION } from 'src/database/database-connection';
 import * as schema from '../database/schema';
-import { eq } from 'drizzle-orm';
+import { and, eq } from 'drizzle-orm';
 
 @Injectable()
 export class WorkspacesService {
@@ -19,20 +19,24 @@ export class WorkspacesService {
     createWorkspaceDto: CreateWorkspaceDto,
     db = this.database,
   ) {
-    const workspace = await dbExecute(
+    const [{ ...workspace }] = await dbExecute(
       db
         .insert(schema.workspaces)
         .values({ ...createWorkspaceDto, ownerId })
         .returning(),
       'Failed to create workspace',
     );
+    await this.addMember(ownerId, workspace.id);
+    return workspace;
+  }
+
+  async addMember(memberId: string, workspaceId: string, db = this.database) {
     await dbExecute(
       db
         .insert(schema.workspaceMembers)
-        .values({ userId: ownerId, workspaceId: workspace[0].id }),
+        .values({ userId: memberId, workspaceId }),
       'Failed to add member',
     );
-    return workspace[0];
   }
 
   async findAll(db = this.database) {
@@ -44,11 +48,32 @@ export class WorkspacesService {
   }
 
   async findById(id: string, db = this.database) {
-    const workspace = await dbExecute(
+    const [{ ...workspace }] = await dbExecute(
       db.select().from(schema.workspaces).where(eq(schema.workspaces.id, id)),
       'Failed to fetch workspace',
     );
-    return workspace[0];
+    return workspace;
+  }
+
+  async findByMemberId(memberId: string, db = this.database) {
+    const workspaces = await dbExecute(
+      db
+        .select({
+          id: schema.workspaces.id,
+          name: schema.workspaces.name,
+          ownerId: schema.workspaces.ownerId,
+          createdAt: schema.workspaces.createdAt,
+          updatedAt: schema.workspaces.updatedAt,
+        })
+        .from(schema.workspaces)
+        .leftJoin(
+          schema.workspaceMembers,
+          eq(schema.workspaces.id, schema.workspaceMembers.workspaceId),
+        )
+        .where(eq(schema.workspaceMembers.userId, memberId)),
+      'Failed to fetch workspaces',
+    );
+    return workspaces;
   }
 
   async update(
@@ -56,14 +81,37 @@ export class WorkspacesService {
     updateWorkspaceDto: UpdateWorkspaceDto,
     db = this.database,
   ) {
-    const updatedWorkspace = await dbExecute(
+    const [{ ...updatedWorkspace }] = await dbExecute(
       db
         .update(schema.workspaces)
         .set(updateWorkspaceDto)
-        .where(eq(schema.workspaces.id, id)),
+        .where(eq(schema.workspaces.id, id))
+        .returning(),
       'Failed to update workspace',
     );
-    return updatedWorkspace[0];
+    return updatedWorkspace;
+  }
+
+  async changeMemberRole(
+    id: string,
+    workspaceId: string,
+    role: 'Member' | 'Owner',
+    db = this.database,
+  ) {
+    const [{ ...membership }] = await dbExecute(
+      db
+        .update(schema.workspaceMembers)
+        .set({ role })
+        .where(
+          and(
+            eq(schema.workspaceMembers.userId, id),
+            eq(schema.workspaceMembers.workspaceId, workspaceId),
+          ),
+        )
+        .returning(),
+      'Failed to change role',
+    );
+    return membership;
   }
 
   async remove(id: string, db = this.database) {

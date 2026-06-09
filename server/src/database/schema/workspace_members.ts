@@ -25,6 +25,9 @@ export const workspaceMembers = pgTable(
     joinedAt: timestamp('joined_at', { withTimezone: true })
       .notNull()
       .defaultNow(),
+    lastAccessedAt: timestamp('last_accessed_at', { withTimezone: true })
+      .notNull()
+      .$onUpdateFn(() => new Date()),
   },
   (table) => [primaryKey({ columns: [table.userId, table.workspaceId] })],
 );

@@ -36,6 +36,20 @@
       "when": 1778585006981,
       "tag": "0004_volatile_wendigo",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1780019646037,
+      "tag": "0005_colossal_pretty_boy",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1780677165831,
+      "tag": "0006_ambitious_warbird",
+      "breakpoints": true
     }
   ]
 }

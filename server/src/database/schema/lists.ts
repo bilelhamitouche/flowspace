@@ -3,7 +3,7 @@ import { integer } from 'drizzle-orm/pg-core';
 import { text } from 'drizzle-orm/pg-core';
 import { uuid } from 'drizzle-orm/pg-core';
 import { pgTable } from 'drizzle-orm/pg-core';
-import { boards } from './boards';
+import { projects } from './projects';
 import { index } from 'drizzle-orm/pg-core';
 
 export const lists = pgTable(
@@ -12,9 +12,9 @@ export const lists = pgTable(
     id: uuid('id').primaryKey().defaultRandom(),
     title: text('title').notNull(),
     position: integer('position').notNull(),
-    boardId: uuid('board_id')
+    projectId: uuid('project_id')
       .notNull()
-      .references(() => boards.id, {
+      .references(() => projects.id, {
         onUpdate: 'cascade',
         onDelete: 'cascade',
       }),
@@ -26,6 +26,6 @@ export const lists = pgTable(
       .$onUpdateFn(() => new Date()),
   },
   (table) => [
-    index('lists_board_position_index').on(table.boardId, table.position),
+    index('lists_project_position_index').on(table.projectId, table.position),
   ],
 );
