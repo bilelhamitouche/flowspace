@@ -18,7 +18,7 @@ export const useLoginMutation = () =>
     onSuccess: async () => {
       await queryClient.refetchQueries({
         queryKey: ["me"],
-        exact: true,
+        exact: false,
       });
       await router.invalidate();
       await router.navigate({ to: "/workspaces" });
