@@ -10,6 +10,7 @@ import {
 import { SidebarMenuButton } from "./ui/sidebar";
 import { currentUserOptions } from "@/api/queries/auth";
 import { useLogoutMutation } from "@/api/mutations/auth";
+import { Paintbrush, Settings } from "lucide-react";
 
 export default function UserAvatar() {
   const { data: user } = useSuspenseQuery(currentUserOptions());
@@ -18,15 +19,45 @@ export default function UserAvatar() {
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <SidebarMenuButton className="flex justify-between items-center">
-            <Avatar>
-              <AvatarImage src="heep" alt="user avatar" />
-              <AvatarFallback>{user.name[0].toUpperCase()}</AvatarFallback>
-            </Avatar>
+          <SidebarMenuButton
+            size="lg"
+            className="flex justify-between items-center"
+          >
+            <div className="flex gap-2 items-center">
+              <Avatar>
+                <AvatarImage src="heep" alt="user avatar" />
+                <AvatarFallback>{user.name[0].toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <div className="flex flex-col items-start">
+                <span className="text-sm font-medium">{user.name}</span>
+                <span className="text-xs">{user.email}</span>
+              </div>
+            </div>
           </SidebarMenuButton>
         }
       />
       <DropdownMenuContent>
+        <DropdownMenuItem>
+          <div className="flex gap-2 items-center">
+            <Avatar>
+              <AvatarImage src="heep" alt="user avatar" />
+              <AvatarFallback>{user.name[0].toUpperCase()}</AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col items-start">
+              <span className="text-sm font-medium">{user.name}</span>
+              <span className="text-xs">{user.email}</span>
+            </div>
+          </div>
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem>
+          <Paintbrush />
+          <span>Appearance</span>
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Settings />
+          <span>Settings</span>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           variant="destructive"
