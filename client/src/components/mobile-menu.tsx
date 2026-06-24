@@ -7,38 +7,46 @@ export default function MobileMenu() {
   return (
     <Drawer direction="top">
       <DrawerTrigger asChild>
-        <Button variant="subtle" size="icon-lg">
-          <Menu size={40} />
+        <Button className="md:hidden" variant="ghost">
+          <Menu />
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="w-full">
-        <DrawerClose className="mt-4 mr-4 ml-auto" asChild>
-          <Button variant="subtle" size="icon">
+      <DrawerContent className="p-8">
+        <DrawerClose asChild>
+          <Button variant="ghost" className="ml-auto w-fit">
             <X />
           </Button>
         </DrawerClose>
-        <nav className="flex flex-col gap-1 p-8 pt-2 w-full">
-          <Button variant="ghost" asChild>
-            <Link to="/" hash="features">
-              Features
-            </Link>
-          </Button>
-          <Button variant="ghost" asChild>
-            <Link to="/" hash="pricing">
-              Pricing
-            </Link>
-          </Button>
-          <Button variant="ghost" asChild>
-            <Link to="/" hash="faqs">
-              FAQs
-            </Link>
-          </Button>
-          <Button variant="ghost" asChild>
-            <Link to="/" hash="contact">
-              Contact
-            </Link>
-          </Button>
-          <Button asChild>
+        <nav className="flex flex-col gap-2 items-center w-full text-lg">
+          <Link
+            to="/"
+            hash="features"
+            className="p-2 w-full text-center transition-colors hover:text-primary"
+          >
+            Features
+          </Link>
+          <Link
+            to="/"
+            hash="faqs"
+            className="p-2 w-full text-center transition-colors hover:text-primary"
+          >
+            FAQs
+          </Link>
+          <Link
+            to="/"
+            hash="pricing"
+            className="p-2 w-full text-center transition-colors hover:text-primary"
+          >
+            Pricing
+          </Link>
+          <Link
+            to="/"
+            hash="learn"
+            className="p-2 w-full text-center transition-colors hover:text-primary"
+          >
+            Learn
+          </Link>
+          <Button size="xl" className="w-full rounded-full">
             <Link to="/auth/register">Register</Link>
           </Button>
         </nav>

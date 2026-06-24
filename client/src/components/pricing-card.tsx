@@ -1,30 +1,48 @@
 import { Button } from "./ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 
 interface PricingCardProps {
-  title: string;
+  name: string;
   price: number;
   features: string[];
 }
 
 export default function PricingCard({
-  title,
+  name,
   price,
   features,
 }: PricingCardProps) {
   return (
-    <article className="flex flex-col gap-4 items-start p-8 border border-foreground/10">
-      <h3 className="text-xl font-semibold">{title}</h3>
-      <p>
-        <span className="text-3xl font-bold">${price}</span>
-        <span className="text-foreground/70">/monthly</span>
-      </p>
-      <p className="text-lg font-medium">Plan includes:</p>
-      <ul className="flex flex-col gap-1 items-start list-none text-foreground/70">
-        {features.map((feature, index) => (
-          <li key={index}>{feature}</li>
-        ))}
-      </ul>
-      <Button className="mt-auto w-full">Choose this plan</Button>
-    </article>
+    <Card>
+      <CardHeader>
+        <CardTitle className="text-2xl font-medium font-heading">
+          {name}
+        </CardTitle>
+        <p className="text-5xl font-bold">{price}$</p>
+        <p className="text-base font-regular text-foreground/70">
+          Per user / month
+        </p>
+      </CardHeader>
+      <CardContent>
+        <ul className="flex flex-col gap-2 items-start p-2 px-4 list-disc">
+          {features.map((feature, index) => (
+            <li key={index} className="text-base">
+              {feature}
+            </li>
+          ))}
+        </ul>
+      </CardContent>
+      <CardFooter>
+        <Button size="xl" className="w-full text-base rounded-full">
+          Choose this plan
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }

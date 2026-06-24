@@ -7,7 +7,7 @@ import { toast } from "sonner";
 export const useLoginMutation = () =>
   useMutation({
     mutationKey: ["login"],
-    mutationFn: async (data: LoginData) =>
+    mutationFn: (data: LoginData) =>
       apiFetch("/api/auth/login", {
         method: "POST",
         headers: {
@@ -15,23 +15,21 @@ export const useLoginMutation = () =>
         },
         body: JSON.stringify(data),
       }),
-    onSuccess: async () => {
-      await queryClient.refetchQueries({
+    onSuccess: () => {
+      queryClient.invalidateQueries({
         queryKey: ["me"],
-        exact: false,
       });
-      await router.invalidate();
-      await router.navigate({ to: "/workspaces" });
+      router.navigate({ to: "/dashboard" });
     },
-    onError: (err) => {
-      toast.error(err.message);
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
 export const useRegisterMutation = () =>
   useMutation({
     mutationKey: ["register"],
-    mutationFn: async (data: RegisterData) =>
+    mutationFn: (data: RegisterData) =>
       apiFetch("/api/auth/register", {
         method: "POST",
         headers: {
@@ -39,34 +37,34 @@ export const useRegisterMutation = () =>
         },
         body: JSON.stringify(data),
       }),
-    onSuccess: async () => {
-      await queryClient.refetchQueries({
+    onSuccess: () => {
+      queryClient.invalidateQueries({
         queryKey: ["me"],
-        exact: true,
       });
-      await router.invalidate();
-      await router.navigate({ to: "/workspaces" });
+      router.navigate({ to: "/dashboard" });
     },
-    onError: (err) => {
-      toast.error(err.message);
+    onError: (error) => {
+      toast.error(error.message);
     },
   });
 
 export const useLogoutMutation = () =>
   useMutation({
     mutationKey: ["logout"],
-    mutationFn: async () =>
+    mutationFn: () =>
       apiFetch("/api/auth/logout", {
         method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
       }),
-    onSuccess: async () => {
-      await queryClient.refetchQueries({
+    onSuccess: () => {
+      queryClient.invalidateQueries({
         queryKey: ["me"],
-        exact: true,
       });
-      await router.invalidate();
+      router.navigate({ to: "/auth/login" });
     },
-    onError: (err) => {
-      toast.error(err.message);
+    onError: (error) => {
+      toast.error(error.message);
     },
   });

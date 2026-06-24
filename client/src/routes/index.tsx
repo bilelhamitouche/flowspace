@@ -1,28 +1,36 @@
-import Faqs from "@/components/faqs";
+import { currentUserOptions } from "@/api/queries/auth";
 import Features from "@/components/features";
 import Footer from "@/components/footer";
 import Hero from "@/components/hero";
 import Navbar from "@/components/navbar";
 import Pricing from "@/components/pricing";
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import Testimonials from "@/components/testimonials";
+import { createFileRoute, isRedirect, redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/")({
-  component: RouteComponent,
   beforeLoad: async ({ context }) => {
-    if (context.authStatus === "Authenticated") {
-      throw redirect({ to: "/workspaces" });
+    try {
+      const user = await context.queryClient.fetchQuery(currentUserOptions());
+      context.isAuthenticated = !!user.id;
+      if (context.isAuthenticated) {
+        throw redirect({ to: "/dashboard" });
+      }
+    } catch (err) {
+      if (isRedirect(err)) throw err;
+      throw redirect({ to: "/auth/login" });
     }
   },
+  component: Index,
 });
 
-function RouteComponent() {
+function Index() {
   return (
     <>
       <Navbar />
       <Hero />
       <Features />
       <Pricing />
-      <Faqs />
+      <Testimonials />
       <Footer />
     </>
   );

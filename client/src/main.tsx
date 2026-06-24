@@ -1,11 +1,11 @@
-import { createRoot } from "react-dom/client";
+import { StrictMode } from "react";
+import ReactDOM from "react-dom/client";
 import { RouterProvider } from "@tanstack/react-router";
 import { queryClient, router } from "./lib/router";
-import { TooltipProvider } from "./components/ui/tooltip";
-import "./index.css";
-import { Toaster } from "./components/ui/sonner";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { StrictMode } from "react";
+import { TooltipProvider } from "./components/ui/tooltip";
+import { Toaster } from "./components/ui/sonner";
+import "./index.css";
 
 declare module "@tanstack/react-router" {
   interface Register {
@@ -13,13 +13,17 @@ declare module "@tanstack/react-router" {
   }
 }
 
-createRoot(document.getElementById("root")!).render(
-  <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <RouterProvider router={router} />
-        <Toaster richColors closeButton position="top-right" />
-      </TooltipProvider>
-    </QueryClientProvider>
-  </StrictMode>,
-);
+const rootElement = document.getElementById("root")!;
+if (!rootElement.innerHTML) {
+  const root = ReactDOM.createRoot(rootElement);
+  root.render(
+    <StrictMode>
+      <QueryClientProvider client={queryClient}>
+        <TooltipProvider>
+          <RouterProvider router={router} />
+          <Toaster position="top-center" />
+        </TooltipProvider>
+      </QueryClientProvider>
+    </StrictMode>,
+  );
+}

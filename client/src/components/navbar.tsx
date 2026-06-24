@@ -1,42 +1,48 @@
 import { Link } from "@tanstack/react-router";
+import Logo from "./logo";
 import { Button } from "./ui/button";
-import { NavigationMenu, NavigationMenuLink } from "./ui/navigation-menu";
 import MobileMenu from "./mobile-menu";
 
 export default function Navbar() {
   return (
-    <header className="container flex justify-between items-center p-4 mx-auto max-w-7xl">
-      <img src="/flowspace-logo.png" alt="Logo image" width="120" />
-      <NavigationMenu className="hidden gap-2 font-medium md:flex">
-        <NavigationMenuLink asChild>
-          <Link to="/" hash="features">
-            Features
-          </Link>
-        </NavigationMenuLink>
-        <NavigationMenuLink asChild>
-          <Link to="/" hash="pricing">
-            Pricing
-          </Link>
-        </NavigationMenuLink>
-        <NavigationMenuLink asChild>
-          <Link to="/" hash="faqs">
-            FAQs
-          </Link>
-        </NavigationMenuLink>
-        <NavigationMenuLink asChild>
-          <Link to="/" hash="contact">
-            Contact
-          </Link>
-        </NavigationMenuLink>
-      </NavigationMenu>
-      <div className="hidden gap-4 md:flex">
-        <Button asChild>
-          <Link to="/auth/register">Register</Link>
-        </Button>
-      </div>
-      <div className="flex gap-4 md:hidden">
-        <MobileMenu />
-      </div>
+    <header className="container flex gap-14 justify-between items-center p-4 mx-auto max-w-7xl">
+      <Logo />
+      <nav className="hidden gap-8 items-center mr-auto md:flex">
+        <Link
+          to="/"
+          hash="features"
+          className="transition-colors text-md hover:text-primary"
+        >
+          Features
+        </Link>
+        <Link
+          to="/"
+          hash="pricing"
+          className="transition-colors text-md hover:text-primary"
+        >
+          Pricing
+        </Link>
+        <Link
+          to="/"
+          hash="faq"
+          className="transition-colors text-md hover:text-primary"
+        >
+          FAQ
+        </Link>
+        <Link
+          to="/"
+          hash="about"
+          className="transition-colors text-md hover:text-primary"
+        >
+          Learn
+        </Link>
+      </nav>
+      <Button
+        size="xl"
+        className="hidden px-10 rounded-full md:flex"
+        children={<Link to="/auth/register">Register</Link>}
+      />
+      <MobileMenu />
     </header>
   );
 }

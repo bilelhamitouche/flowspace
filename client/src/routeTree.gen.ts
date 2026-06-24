@@ -9,28 +9,19 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WorkspacesRouteImport } from './routes/workspaces'
-import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as DashboardRouteRouteImport } from './routes/dashboard/route'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as WorkspacesWorkspaceIdRouteImport } from './routes/workspaces/$workspaceId'
-import { Route as WorkspacesWorkspaceIdIndexRouteImport } from './routes/workspaces/$workspaceId/index'
-import { Route as SettingsBillingIndexRouteImport } from './routes/settings/billing/index'
-import { Route as SettingsAppearanceIndexRouteImport } from './routes/settings/appearance/index'
-import { Route as SettingsAccountIndexRouteImport } from './routes/settings/account/index'
+import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as ContactIndexRouteImport } from './routes/contact/index'
+import { Route as AboutIndexRouteImport } from './routes/about/index'
+import { Route as LegalTermsIndexRouteImport } from './routes/legal/terms/index'
+import { Route as LegalPrivacyIndexRouteImport } from './routes/legal/privacy/index'
 import { Route as AuthRegisterIndexRouteImport } from './routes/auth/register/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/auth/login/index'
-import { Route as WorkspacesWorkspaceIdTasksRouteImport } from './routes/workspaces/$workspaceId/tasks'
-import { Route as WorkspacesWorkspaceIdProjectsIndexRouteImport } from './routes/workspaces/$workspaceId/projects/index'
-import { Route as WorkspacesWorkspaceIdProjectsProjectIdRouteImport } from './routes/workspaces/$workspaceId/projects/$projectId'
 
-const WorkspacesRoute = WorkspacesRouteImport.update({
-  id: '/workspaces',
-  path: '/workspaces',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
+const DashboardRouteRoute = DashboardRouteRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -38,31 +29,30 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WorkspacesWorkspaceIdRoute = WorkspacesWorkspaceIdRouteImport.update({
-  id: '/$workspaceId',
-  path: '/$workspaceId',
-  getParentRoute: () => WorkspacesRoute,
+const DashboardIndexRoute = DashboardIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => DashboardRouteRoute,
 } as any)
-const WorkspacesWorkspaceIdIndexRoute =
-  WorkspacesWorkspaceIdIndexRouteImport.update({
-    id: '/',
-    path: '/',
-    getParentRoute: () => WorkspacesWorkspaceIdRoute,
-  } as any)
-const SettingsBillingIndexRoute = SettingsBillingIndexRouteImport.update({
-  id: '/billing/',
-  path: '/billing/',
-  getParentRoute: () => SettingsRoute,
+const ContactIndexRoute = ContactIndexRouteImport.update({
+  id: '/contact/',
+  path: '/contact/',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const SettingsAppearanceIndexRoute = SettingsAppearanceIndexRouteImport.update({
-  id: '/appearance/',
-  path: '/appearance/',
-  getParentRoute: () => SettingsRoute,
+const AboutIndexRoute = AboutIndexRouteImport.update({
+  id: '/about/',
+  path: '/about/',
+  getParentRoute: () => rootRouteImport,
 } as any)
-const SettingsAccountIndexRoute = SettingsAccountIndexRouteImport.update({
-  id: '/account/',
-  path: '/account/',
-  getParentRoute: () => SettingsRoute,
+const LegalTermsIndexRoute = LegalTermsIndexRouteImport.update({
+  id: '/legal/terms/',
+  path: '/legal/terms/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LegalPrivacyIndexRoute = LegalPrivacyIndexRouteImport.update({
+  id: '/legal/privacy/',
+  path: '/legal/privacy/',
+  getParentRoute: () => rootRouteImport,
 } as any)
 const AuthRegisterIndexRoute = AuthRegisterIndexRouteImport.update({
   id: '/auth/register/',
@@ -74,139 +64,93 @@ const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
   path: '/auth/login/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WorkspacesWorkspaceIdTasksRoute =
-  WorkspacesWorkspaceIdTasksRouteImport.update({
-    id: '/tasks',
-    path: '/tasks',
-    getParentRoute: () => WorkspacesWorkspaceIdRoute,
-  } as any)
-const WorkspacesWorkspaceIdProjectsIndexRoute =
-  WorkspacesWorkspaceIdProjectsIndexRouteImport.update({
-    id: '/projects/',
-    path: '/projects/',
-    getParentRoute: () => WorkspacesWorkspaceIdRoute,
-  } as any)
-const WorkspacesWorkspaceIdProjectsProjectIdRoute =
-  WorkspacesWorkspaceIdProjectsProjectIdRouteImport.update({
-    id: '/projects/$projectId',
-    path: '/projects/$projectId',
-    getParentRoute: () => WorkspacesWorkspaceIdRoute,
-  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/settings': typeof SettingsRouteWithChildren
-  '/workspaces': typeof WorkspacesRouteWithChildren
-  '/workspaces/$workspaceId': typeof WorkspacesWorkspaceIdRouteWithChildren
-  '/workspaces/$workspaceId/tasks': typeof WorkspacesWorkspaceIdTasksRoute
+  '/dashboard': typeof DashboardRouteRouteWithChildren
+  '/about/': typeof AboutIndexRoute
+  '/contact/': typeof ContactIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/auth/login/': typeof AuthLoginIndexRoute
   '/auth/register/': typeof AuthRegisterIndexRoute
-  '/settings/account/': typeof SettingsAccountIndexRoute
-  '/settings/appearance/': typeof SettingsAppearanceIndexRoute
-  '/settings/billing/': typeof SettingsBillingIndexRoute
-  '/workspaces/$workspaceId/': typeof WorkspacesWorkspaceIdIndexRoute
-  '/workspaces/$workspaceId/projects/$projectId': typeof WorkspacesWorkspaceIdProjectsProjectIdRoute
-  '/workspaces/$workspaceId/projects/': typeof WorkspacesWorkspaceIdProjectsIndexRoute
+  '/legal/privacy/': typeof LegalPrivacyIndexRoute
+  '/legal/terms/': typeof LegalTermsIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/settings': typeof SettingsRouteWithChildren
-  '/workspaces': typeof WorkspacesRouteWithChildren
-  '/workspaces/$workspaceId/tasks': typeof WorkspacesWorkspaceIdTasksRoute
+  '/about': typeof AboutIndexRoute
+  '/contact': typeof ContactIndexRoute
+  '/dashboard': typeof DashboardIndexRoute
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/register': typeof AuthRegisterIndexRoute
-  '/settings/account': typeof SettingsAccountIndexRoute
-  '/settings/appearance': typeof SettingsAppearanceIndexRoute
-  '/settings/billing': typeof SettingsBillingIndexRoute
-  '/workspaces/$workspaceId': typeof WorkspacesWorkspaceIdIndexRoute
-  '/workspaces/$workspaceId/projects/$projectId': typeof WorkspacesWorkspaceIdProjectsProjectIdRoute
-  '/workspaces/$workspaceId/projects': typeof WorkspacesWorkspaceIdProjectsIndexRoute
+  '/legal/privacy': typeof LegalPrivacyIndexRoute
+  '/legal/terms': typeof LegalTermsIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/settings': typeof SettingsRouteWithChildren
-  '/workspaces': typeof WorkspacesRouteWithChildren
-  '/workspaces/$workspaceId': typeof WorkspacesWorkspaceIdRouteWithChildren
-  '/workspaces/$workspaceId/tasks': typeof WorkspacesWorkspaceIdTasksRoute
+  '/dashboard': typeof DashboardRouteRouteWithChildren
+  '/about/': typeof AboutIndexRoute
+  '/contact/': typeof ContactIndexRoute
+  '/dashboard/': typeof DashboardIndexRoute
   '/auth/login/': typeof AuthLoginIndexRoute
   '/auth/register/': typeof AuthRegisterIndexRoute
-  '/settings/account/': typeof SettingsAccountIndexRoute
-  '/settings/appearance/': typeof SettingsAppearanceIndexRoute
-  '/settings/billing/': typeof SettingsBillingIndexRoute
-  '/workspaces/$workspaceId/': typeof WorkspacesWorkspaceIdIndexRoute
-  '/workspaces/$workspaceId/projects/$projectId': typeof WorkspacesWorkspaceIdProjectsProjectIdRoute
-  '/workspaces/$workspaceId/projects/': typeof WorkspacesWorkspaceIdProjectsIndexRoute
+  '/legal/privacy/': typeof LegalPrivacyIndexRoute
+  '/legal/terms/': typeof LegalTermsIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
-    | '/settings'
-    | '/workspaces'
-    | '/workspaces/$workspaceId'
-    | '/workspaces/$workspaceId/tasks'
+    | '/dashboard'
+    | '/about/'
+    | '/contact/'
+    | '/dashboard/'
     | '/auth/login/'
     | '/auth/register/'
-    | '/settings/account/'
-    | '/settings/appearance/'
-    | '/settings/billing/'
-    | '/workspaces/$workspaceId/'
-    | '/workspaces/$workspaceId/projects/$projectId'
-    | '/workspaces/$workspaceId/projects/'
+    | '/legal/privacy/'
+    | '/legal/terms/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/settings'
-    | '/workspaces'
-    | '/workspaces/$workspaceId/tasks'
+    | '/about'
+    | '/contact'
+    | '/dashboard'
     | '/auth/login'
     | '/auth/register'
-    | '/settings/account'
-    | '/settings/appearance'
-    | '/settings/billing'
-    | '/workspaces/$workspaceId'
-    | '/workspaces/$workspaceId/projects/$projectId'
-    | '/workspaces/$workspaceId/projects'
+    | '/legal/privacy'
+    | '/legal/terms'
   id:
     | '__root__'
     | '/'
-    | '/settings'
-    | '/workspaces'
-    | '/workspaces/$workspaceId'
-    | '/workspaces/$workspaceId/tasks'
+    | '/dashboard'
+    | '/about/'
+    | '/contact/'
+    | '/dashboard/'
     | '/auth/login/'
     | '/auth/register/'
-    | '/settings/account/'
-    | '/settings/appearance/'
-    | '/settings/billing/'
-    | '/workspaces/$workspaceId/'
-    | '/workspaces/$workspaceId/projects/$projectId'
-    | '/workspaces/$workspaceId/projects/'
+    | '/legal/privacy/'
+    | '/legal/terms/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  SettingsRoute: typeof SettingsRouteWithChildren
-  WorkspacesRoute: typeof WorkspacesRouteWithChildren
+  DashboardRouteRoute: typeof DashboardRouteRouteWithChildren
+  AboutIndexRoute: typeof AboutIndexRoute
+  ContactIndexRoute: typeof ContactIndexRoute
   AuthLoginIndexRoute: typeof AuthLoginIndexRoute
   AuthRegisterIndexRoute: typeof AuthRegisterIndexRoute
+  LegalPrivacyIndexRoute: typeof LegalPrivacyIndexRoute
+  LegalTermsIndexRoute: typeof LegalTermsIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/workspaces': {
-      id: '/workspaces'
-      path: '/workspaces'
-      fullPath: '/workspaces'
-      preLoaderRoute: typeof WorkspacesRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -216,40 +160,40 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/workspaces/$workspaceId': {
-      id: '/workspaces/$workspaceId'
-      path: '/$workspaceId'
-      fullPath: '/workspaces/$workspaceId'
-      preLoaderRoute: typeof WorkspacesWorkspaceIdRouteImport
-      parentRoute: typeof WorkspacesRoute
-    }
-    '/workspaces/$workspaceId/': {
-      id: '/workspaces/$workspaceId/'
+    '/dashboard/': {
+      id: '/dashboard/'
       path: '/'
-      fullPath: '/workspaces/$workspaceId/'
-      preLoaderRoute: typeof WorkspacesWorkspaceIdIndexRouteImport
-      parentRoute: typeof WorkspacesWorkspaceIdRoute
+      fullPath: '/dashboard/'
+      preLoaderRoute: typeof DashboardIndexRouteImport
+      parentRoute: typeof DashboardRouteRoute
     }
-    '/settings/billing/': {
-      id: '/settings/billing/'
-      path: '/billing'
-      fullPath: '/settings/billing/'
-      preLoaderRoute: typeof SettingsBillingIndexRouteImport
-      parentRoute: typeof SettingsRoute
+    '/contact/': {
+      id: '/contact/'
+      path: '/contact'
+      fullPath: '/contact/'
+      preLoaderRoute: typeof ContactIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/settings/appearance/': {
-      id: '/settings/appearance/'
-      path: '/appearance'
-      fullPath: '/settings/appearance/'
-      preLoaderRoute: typeof SettingsAppearanceIndexRouteImport
-      parentRoute: typeof SettingsRoute
+    '/about/': {
+      id: '/about/'
+      path: '/about'
+      fullPath: '/about/'
+      preLoaderRoute: typeof AboutIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
-    '/settings/account/': {
-      id: '/settings/account/'
-      path: '/account'
-      fullPath: '/settings/account/'
-      preLoaderRoute: typeof SettingsAccountIndexRouteImport
-      parentRoute: typeof SettingsRoute
+    '/legal/terms/': {
+      id: '/legal/terms/'
+      path: '/legal/terms'
+      fullPath: '/legal/terms/'
+      preLoaderRoute: typeof LegalTermsIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/legal/privacy/': {
+      id: '/legal/privacy/'
+      path: '/legal/privacy'
+      fullPath: '/legal/privacy/'
+      preLoaderRoute: typeof LegalPrivacyIndexRouteImport
+      parentRoute: typeof rootRouteImport
     }
     '/auth/register/': {
       id: '/auth/register/'
@@ -265,85 +209,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/workspaces/$workspaceId/tasks': {
-      id: '/workspaces/$workspaceId/tasks'
-      path: '/tasks'
-      fullPath: '/workspaces/$workspaceId/tasks'
-      preLoaderRoute: typeof WorkspacesWorkspaceIdTasksRouteImport
-      parentRoute: typeof WorkspacesWorkspaceIdRoute
-    }
-    '/workspaces/$workspaceId/projects/': {
-      id: '/workspaces/$workspaceId/projects/'
-      path: '/projects'
-      fullPath: '/workspaces/$workspaceId/projects/'
-      preLoaderRoute: typeof WorkspacesWorkspaceIdProjectsIndexRouteImport
-      parentRoute: typeof WorkspacesWorkspaceIdRoute
-    }
-    '/workspaces/$workspaceId/projects/$projectId': {
-      id: '/workspaces/$workspaceId/projects/$projectId'
-      path: '/projects/$projectId'
-      fullPath: '/workspaces/$workspaceId/projects/$projectId'
-      preLoaderRoute: typeof WorkspacesWorkspaceIdProjectsProjectIdRouteImport
-      parentRoute: typeof WorkspacesWorkspaceIdRoute
-    }
   }
 }
 
-interface SettingsRouteChildren {
-  SettingsAccountIndexRoute: typeof SettingsAccountIndexRoute
-  SettingsAppearanceIndexRoute: typeof SettingsAppearanceIndexRoute
-  SettingsBillingIndexRoute: typeof SettingsBillingIndexRoute
+interface DashboardRouteRouteChildren {
+  DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
-const SettingsRouteChildren: SettingsRouteChildren = {
-  SettingsAccountIndexRoute: SettingsAccountIndexRoute,
-  SettingsAppearanceIndexRoute: SettingsAppearanceIndexRoute,
-  SettingsBillingIndexRoute: SettingsBillingIndexRoute,
+const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
+  DashboardIndexRoute: DashboardIndexRoute,
 }
 
-const SettingsRouteWithChildren = SettingsRoute._addFileChildren(
-  SettingsRouteChildren,
-)
-
-interface WorkspacesWorkspaceIdRouteChildren {
-  WorkspacesWorkspaceIdTasksRoute: typeof WorkspacesWorkspaceIdTasksRoute
-  WorkspacesWorkspaceIdIndexRoute: typeof WorkspacesWorkspaceIdIndexRoute
-  WorkspacesWorkspaceIdProjectsProjectIdRoute: typeof WorkspacesWorkspaceIdProjectsProjectIdRoute
-  WorkspacesWorkspaceIdProjectsIndexRoute: typeof WorkspacesWorkspaceIdProjectsIndexRoute
-}
-
-const WorkspacesWorkspaceIdRouteChildren: WorkspacesWorkspaceIdRouteChildren = {
-  WorkspacesWorkspaceIdTasksRoute: WorkspacesWorkspaceIdTasksRoute,
-  WorkspacesWorkspaceIdIndexRoute: WorkspacesWorkspaceIdIndexRoute,
-  WorkspacesWorkspaceIdProjectsProjectIdRoute:
-    WorkspacesWorkspaceIdProjectsProjectIdRoute,
-  WorkspacesWorkspaceIdProjectsIndexRoute:
-    WorkspacesWorkspaceIdProjectsIndexRoute,
-}
-
-const WorkspacesWorkspaceIdRouteWithChildren =
-  WorkspacesWorkspaceIdRoute._addFileChildren(
-    WorkspacesWorkspaceIdRouteChildren,
-  )
-
-interface WorkspacesRouteChildren {
-  WorkspacesWorkspaceIdRoute: typeof WorkspacesWorkspaceIdRouteWithChildren
-}
-
-const WorkspacesRouteChildren: WorkspacesRouteChildren = {
-  WorkspacesWorkspaceIdRoute: WorkspacesWorkspaceIdRouteWithChildren,
-}
-
-const WorkspacesRouteWithChildren = WorkspacesRoute._addFileChildren(
-  WorkspacesRouteChildren,
+const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(
+  DashboardRouteRouteChildren,
 )
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  SettingsRoute: SettingsRouteWithChildren,
-  WorkspacesRoute: WorkspacesRouteWithChildren,
+  DashboardRouteRoute: DashboardRouteRouteWithChildren,
+  AboutIndexRoute: AboutIndexRoute,
+  ContactIndexRoute: ContactIndexRoute,
   AuthLoginIndexRoute: AuthLoginIndexRoute,
   AuthRegisterIndexRoute: AuthRegisterIndexRoute,
+  LegalPrivacyIndexRoute: LegalPrivacyIndexRoute,
+  LegalTermsIndexRoute: LegalTermsIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -1,15 +1,21 @@
-import ErrorComponent from "@/components/error";
-import NotFoundComponent from "@/components/not-found";
-import { Toaster } from "@/components/ui/sonner";
-import type { RouterContext } from "@/types/router-context";
-import { createRootRouteWithContext, Outlet } from "@tanstack/react-router";
+import {
+  createRootRouteWithContext,
+  Outlet,
+  redirect,
+} from "@tanstack/react-router";
+import type { RouterContext } from "../types/router-context";
 import { TanStackRouterDevtools } from "@tanstack/react-router-devtools";
+import ErrorComponent from "@/components/error-component";
 
 export const Route = createRootRouteWithContext<RouterContext>()({
+  beforeLoad: async ({ context }) => {
+    if (context.isAuthenticated) {
+      throw redirect({ to: "/dashboard" });
+    }
+  },
   component: RootComponent,
-  notFoundComponent: NotFoundComponent,
-  errorComponent: ({ error }) => {
-    return ErrorComponent(error);
+  errorComponent: () => {
+    return <ErrorComponent />;
   },
 });
 
@@ -18,7 +24,6 @@ export function RootComponent() {
     <>
       <Outlet />
       <TanStackRouterDevtools position="bottom-right" />
-      <Toaster position="top-center" />
     </>
   );
 }

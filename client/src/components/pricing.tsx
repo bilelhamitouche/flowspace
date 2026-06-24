@@ -6,40 +6,40 @@ export default function Pricing() {
       id="pricing"
       className="container flex flex-col gap-8 items-center p-8 py-20 mx-auto max-w-7xl"
     >
-      <div className="flex flex-col gap-2 items-center max-w-2xl">
-        <p className="text-lg font-medium uppercase text-primary">
-          Our Pricing
-        </p>
-        <h2 className="text-2xl font-semibold text-center md:text-3xl">
-          Pricing that works from day one
-        </h2>
-        <p className="text-base font-medium text-center md:text-lg text-foreground/60">
-          No overthinking—just a clear plan with the features you need to
-          launch, manage, and scale.
+      <div className="space-y-4 text-center">
+        <h3 className="text-3xl font-medium md:text-4xl font-heading">
+          Pricing
+        </h3>
+        <p className="text-base font-medium md:text-xl text-foreground/70">
+          Choose the pricing plan that fits you the best
         </p>
       </div>
-      <div className="grid grid-cols-1 gap-8 justify-center w-full md:grid-cols-2 md:w-2xl">
+      <div className="grid grid-cols-1 gap-8 w-full md:grid-cols-3">
         <PricingCard
-          title="Free"
+          name="Free"
           price={0}
           features={[
-            "✓ Up to 3 boards",
-            "✓ Up to 3 members",
-            "✓ Unlimited tasks",
-            "✓ Task comments",
-            "✓ Drag & drop workflows",
+            "3 Workspaces",
+            "5 boards per workspace",
+            "Unlimited tasks",
           ]}
         />
         <PricingCard
-          title="Pro"
+          name="Pro"
           price={15}
           features={[
-            "✓ Unlimited boards",
-            "✓ Unlimited members",
-            "✓ Advanced permissions",
-            "✓ Activity history",
-            "✓ File uploads",
-            "✓ Productivity insights",
+            "15 Workspaces",
+            "20 boards per workspace",
+            "Unlimited tasks",
+          ]}
+        />
+        <PricingCard
+          name="Enterprise"
+          price={25}
+          features={[
+            "Unlimited Workspaces",
+            "Unlimited boards per workspace",
+            "Unlimited tasks",
           ]}
         />
       </div>

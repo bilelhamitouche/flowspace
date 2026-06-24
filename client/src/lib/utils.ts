@@ -30,9 +30,23 @@ export const apiFetch = async (path: string, options?: RequestInit) => {
   }
 
   const text = await res.text();
-  const data = text ? JSON.parse(text) : null;
+  const data = safeJSONParse(text);
 
-  if (!res.ok) throw new Error(data?.message || "Something went wrong");
+  if (!res.ok) {
+    throw new Error(data?.message);
+  }
 
   return data;
 };
+
+function safeJSONParse(value: string | null | undefined) {
+  if (value == null) {
+    throw new Error("Something wrong happened");
+  }
+  try {
+    const data = JSON.parse(value);
+    return data;
+  } catch (err) {
+    throw new Error("Internal Server Error");
+  }
+}
