@@ -9,7 +9,6 @@ import {
 } from "./ui/dropdown-menu";
 import { SidebarMenuButton } from "./ui/sidebar";
 import { currentUserOptions } from "@/api/queries/auth";
-import { Button } from "./ui/button";
 import { useLogoutMutation } from "@/api/mutations/auth";
 
 export default function UserAvatar() {
