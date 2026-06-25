@@ -17,7 +17,7 @@ export const Route = createFileRoute("/")({
       }
     } catch (err) {
       if (isRedirect(err)) throw err;
-      throw redirect({ to: "/auth/login" });
+      throw redirect({ to: "/" });
     }
   },
   component: Index,
