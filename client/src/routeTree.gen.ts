@@ -18,6 +18,7 @@ import { Route as LegalTermsIndexRouteImport } from './routes/legal/terms/index'
 import { Route as LegalPrivacyIndexRouteImport } from './routes/legal/privacy/index'
 import { Route as AuthRegisterIndexRouteImport } from './routes/auth/register/index'
 import { Route as AuthLoginIndexRouteImport } from './routes/auth/login/index'
+import { Route as DashboardWorkspacesWorkspaceIdRouteImport } from './routes/dashboard/workspaces/$workspaceId'
 
 const DashboardRouteRoute = DashboardRouteRouteImport.update({
   id: '/dashboard',
@@ -64,6 +65,12 @@ const AuthLoginIndexRoute = AuthLoginIndexRouteImport.update({
   path: '/auth/login/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardWorkspacesWorkspaceIdRoute =
+  DashboardWorkspacesWorkspaceIdRouteImport.update({
+    id: '/workspaces/$workspaceId',
+    path: '/workspaces/$workspaceId',
+    getParentRoute: () => DashboardRouteRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -71,6 +78,7 @@ export interface FileRoutesByFullPath {
   '/about/': typeof AboutIndexRoute
   '/contact/': typeof ContactIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/workspaces/$workspaceId': typeof DashboardWorkspacesWorkspaceIdRoute
   '/auth/login/': typeof AuthLoginIndexRoute
   '/auth/register/': typeof AuthRegisterIndexRoute
   '/legal/privacy/': typeof LegalPrivacyIndexRoute
@@ -81,6 +89,7 @@ export interface FileRoutesByTo {
   '/about': typeof AboutIndexRoute
   '/contact': typeof ContactIndexRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/dashboard/workspaces/$workspaceId': typeof DashboardWorkspacesWorkspaceIdRoute
   '/auth/login': typeof AuthLoginIndexRoute
   '/auth/register': typeof AuthRegisterIndexRoute
   '/legal/privacy': typeof LegalPrivacyIndexRoute
@@ -93,6 +102,7 @@ export interface FileRoutesById {
   '/about/': typeof AboutIndexRoute
   '/contact/': typeof ContactIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/dashboard/workspaces/$workspaceId': typeof DashboardWorkspacesWorkspaceIdRoute
   '/auth/login/': typeof AuthLoginIndexRoute
   '/auth/register/': typeof AuthRegisterIndexRoute
   '/legal/privacy/': typeof LegalPrivacyIndexRoute
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/about/'
     | '/contact/'
     | '/dashboard/'
+    | '/dashboard/workspaces/$workspaceId'
     | '/auth/login/'
     | '/auth/register/'
     | '/legal/privacy/'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/about'
     | '/contact'
     | '/dashboard'
+    | '/dashboard/workspaces/$workspaceId'
     | '/auth/login'
     | '/auth/register'
     | '/legal/privacy'
@@ -127,6 +139,7 @@ export interface FileRouteTypes {
     | '/about/'
     | '/contact/'
     | '/dashboard/'
+    | '/dashboard/workspaces/$workspaceId'
     | '/auth/login/'
     | '/auth/register/'
     | '/legal/privacy/'
@@ -209,15 +222,24 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthLoginIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/workspaces/$workspaceId': {
+      id: '/dashboard/workspaces/$workspaceId'
+      path: '/workspaces/$workspaceId'
+      fullPath: '/dashboard/workspaces/$workspaceId'
+      preLoaderRoute: typeof DashboardWorkspacesWorkspaceIdRouteImport
+      parentRoute: typeof DashboardRouteRoute
+    }
   }
 }
 
 interface DashboardRouteRouteChildren {
   DashboardIndexRoute: typeof DashboardIndexRoute
+  DashboardWorkspacesWorkspaceIdRoute: typeof DashboardWorkspacesWorkspaceIdRoute
 }
 
 const DashboardRouteRouteChildren: DashboardRouteRouteChildren = {
   DashboardIndexRoute: DashboardIndexRoute,
+  DashboardWorkspacesWorkspaceIdRoute: DashboardWorkspacesWorkspaceIdRoute,
 }
 
 const DashboardRouteRouteWithChildren = DashboardRouteRoute._addFileChildren(

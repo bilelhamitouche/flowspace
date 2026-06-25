@@ -12,6 +12,7 @@ export const Route = createFileRoute("/")({
     try {
       const user = await context.queryClient.fetchQuery(currentUserOptions());
       context.isAuthenticated = !!user.id;
+      console.log(user, context.isAuthenticated);
       if (context.isAuthenticated) {
         throw redirect({ to: "/dashboard" });
       }
@@ -19,6 +20,7 @@ export const Route = createFileRoute("/")({
       if (isRedirect(err)) throw err;
       throw redirect({ to: "/" });
     }
+    console.log(context.isAuthenticated);
   },
   component: Index,
 });
