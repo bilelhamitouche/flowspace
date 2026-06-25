@@ -10,7 +10,7 @@ import {
 import { SidebarMenuButton } from "./ui/sidebar";
 import { currentUserOptions } from "@/api/queries/auth";
 import { useLogoutMutation } from "@/api/mutations/auth";
-import { Paintbrush, Settings } from "lucide-react";
+import { ChevronsUpDown, Coins, Paintbrush, User } from "lucide-react";
 
 export default function UserAvatar() {
   const { data: user } = useSuspenseQuery(currentUserOptions());
@@ -33,6 +33,7 @@ export default function UserAvatar() {
                 <span className="text-xs">{user.email}</span>
               </div>
             </div>
+            <ChevronsUpDown />
           </SidebarMenuButton>
         }
       />
@@ -40,7 +41,7 @@ export default function UserAvatar() {
         <DropdownMenuItem>
           <div className="flex gap-2 items-center">
             <Avatar>
-              <AvatarImage src="heep" alt="user avatar" />
+              <AvatarImage src={user.avatarUrl as string} alt="user avatar" />
               <AvatarFallback>{user.name[0].toUpperCase()}</AvatarFallback>
             </Avatar>
             <div className="flex flex-col items-start">
@@ -51,12 +52,12 @@ export default function UserAvatar() {
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem>
-          <Paintbrush />
-          <span>Appearance</span>
+          <User />
+          <span>Account</span>
         </DropdownMenuItem>
         <DropdownMenuItem>
-          <Settings />
-          <span>Settings</span>
+          <Coins />
+          <span>Billing</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
