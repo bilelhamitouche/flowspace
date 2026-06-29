@@ -6,9 +6,9 @@ import {
   Patch,
   Param,
   Delete,
-  UseGuards,
   HttpCode,
   HttpStatus,
+  UseGuards,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dto/create-user.dto';
@@ -29,22 +29,15 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Get()
-  async getUsers() {
+  async findUsers() {
     return this.usersService.findAll();
   }
 
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.OK)
   @Get(':id')
-  async getUser(@Param('id') id: string) {
+  async findUser(@Param('id') id: string) {
     return this.usersService.findById(id);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @HttpCode(HttpStatus.OK)
-  @Get(':id/active-workspace')
-  async getActiveWorkspace(@Param('id') id: string) {
-    return this.usersService.findActiveWorkspaceId(id);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -60,7 +53,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard)
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete(':id')
-  async deleteUser(@Param('id') id: string) {
+  async removeUser(@Param('id') id: string) {
     return this.usersService.remove(id);
   }
 }
