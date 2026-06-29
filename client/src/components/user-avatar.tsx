@@ -10,7 +10,7 @@ import {
 import { SidebarMenuButton } from "./ui/sidebar";
 import { currentUserOptions } from "@/api/queries/auth";
 import { useLogoutMutation } from "@/api/mutations/auth";
-import { ChevronsUpDown, Coins, Paintbrush, User } from "lucide-react";
+import { ChevronsUpDown, Coins, User } from "lucide-react";
 
 export default function UserAvatar() {
   const { data: user } = useSuspenseQuery(currentUserOptions());
