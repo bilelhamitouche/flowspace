@@ -1,3 +1,4 @@
+import { ApiError } from "@/types/apiError";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -25,28 +26,20 @@ export const apiFetch = async (path: string, options?: RequestInit) => {
         ...options,
       });
     } else {
-      throw new Error("Unauthorized");
+      throw new ApiError(401, "Unauthorized", undefined);
     }
   }
 
   const text = await res.text();
-  const data = safeJSONParse(text);
+  const data = text ? JSON.parse(text) : null;
 
   if (!res.ok) {
-    throw new Error(data?.message);
+    throw new ApiError(
+      res.status,
+      data?.message || "Something went wrong",
+      data,
+    );
   }
 
   return data;
 };
-
-function safeJSONParse(value: string | null | undefined) {
-  if (value == null) {
-    throw new Error("Something wrong happened");
-  }
-  try {
-    const data = JSON.parse(value);
-    return data;
-  } catch (err) {
-    throw new Error("Internal Server Error");
-  }
-}
