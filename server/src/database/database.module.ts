@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
+import { DATABASE_CONNECTION } from './database-connection';
 import { ConfigService } from '@nestjs/config';
 import { Pool } from 'pg';
-import { drizzle } from 'drizzle-orm/node-postgres';
-import { DATABASE_CONNECTION } from './database-connection';
 import * as schema from './schema';
+import { drizzle } from 'drizzle-orm/node-postgres';
 
 @Module({
   providers: [
@@ -15,9 +15,7 @@ import * as schema from './schema';
           connectionTimeoutMillis: 10000,
           keepAlive: true,
         });
-        return drizzle(pool, {
-          schema,
-        });
+        return drizzle(pool, { schema });
       },
       inject: [ConfigService],
     },

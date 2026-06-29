@@ -1,15 +1,14 @@
-import { text, timestamp } from 'drizzle-orm/pg-core';
-import { uuid } from 'drizzle-orm/pg-core';
+import { text } from 'drizzle-orm/pg-core';
+import { timestamp, uuid } from 'drizzle-orm/pg-core';
 import { pgTable } from 'drizzle-orm/pg-core';
-import { statuses } from './statuses';
+import { projects } from './projects';
 
-export const tasks = pgTable('tasks', {
+export const statuses = pgTable('statuses', {
   id: uuid('id').primaryKey().defaultRandom(),
   title: text('title').notNull(),
-  description: text('description').notNull(),
-  statusId: uuid('status_id')
+  projectId: uuid('project_id')
     .notNull()
-    .references(() => statuses.id, { onDelete: 'cascade' }),
+    .references(() => projects.id, { onDelete: 'cascade' }),
   createdAt: timestamp('created_at', { withTimezone: true })
     .notNull()
     .defaultNow(),
