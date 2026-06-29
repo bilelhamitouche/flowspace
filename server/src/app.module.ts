@@ -1,13 +1,10 @@
 import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
 import { UsersModule } from './users/users.module';
 import { AuthModule } from './auth/auth.module';
 import { DatabaseModule } from './database/database.module';
-import { ConfigModule } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { WorkspacesModule } from './workspaces/workspaces.module';
-import { ProjectsModule } from './projects/projects.module';
-import { TasksModule } from './tasks/tasks.module';
-import { ListsModule } from './lists/lists.module';
 
 @Module({
   imports: [
@@ -17,10 +14,6 @@ import { ListsModule } from './lists/lists.module';
     UsersModule,
     AuthModule,
     WorkspacesModule,
-    ProjectsModule,
-    TasksModule,
-    ListsModule,
   ],
-  providers: [],
 })
 export class AppModule {}

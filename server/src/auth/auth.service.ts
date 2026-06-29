@@ -1,29 +1,22 @@
 import {
   BadRequestException,
   ConflictException,
-  Inject,
   Injectable,
   UnauthorizedException,
 } from '@nestjs/common';
-import { RegisterDto } from './dto/register.dto';
-import { UsersService } from 'src/users/users.service';
-import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { UsersService } from 'src/users/users.service';
+import * as bcrypt from 'bcrypt';
+import { RegisterDto } from './dto/register.dto';
 import * as schema from '../database/schema';
-import { SALT_ROUNDS } from 'src/common/constants/constants';
-import { DATABASE_CONNECTION } from 'src/database/database-connection';
-import { NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { WorkspacesService } from 'src/workspaces/workspaces.service';
+import { SALT_ROUNDS } from 'src/common/constants';
 
 @Injectable()
 export class AuthService {
   constructor(
-    @Inject(DATABASE_CONNECTION)
-    private database: NodePgDatabase<typeof schema>,
-    private usersService: UsersService,
-    private workspacesService: WorkspacesService,
     private configService: ConfigService,
+    private usersService: UsersService,
     private jwtService: JwtService,
   ) {}
 
@@ -71,46 +64,23 @@ export class AuthService {
   async register(registerDto: RegisterDto) {
     const user = await this.usersService.findByEmail(registerDto.email);
     if (user) {
-      throw new ConflictException('User with this email already exists');
+      throw new ConflictException('User already exists');
     }
-    const newUser = await this.database.transaction(async (tx) => {
-      const user = await this.usersService.create(registerDto, tx);
-      const workspace = await this.workspacesService.create(
-        user.id,
-        { name: 'Default Workspace' },
-        tx,
-      );
-      const [updatedUser, _] = await Promise.all([
-        this.usersService.update(
-          user.id,
-          { activeWorkspaceId: workspace.id },
-          tx,
-        ),
-        this.workspacesService.addMember(user.id, workspace.id, tx),
-      ]);
-      return updatedUser;
-    });
+    const newUser = await this.usersService.create(registerDto);
     const tokens = await this.login(newUser);
     return tokens;
   }
 
   async login(user: typeof schema.users.$inferSelect) {
-    const {
-      accessToken,
-      refreshToken,
-      expiresAccessToken,
-      expiresRefreshToken,
-    } = await this.generateTokens(user.id, user.password);
-    const hashedRefreshToken = await bcrypt.hash(refreshToken, SALT_ROUNDS);
+    const tokens = await this.generateTokens(user.id, user.email);
+    const hashedRefreshToken = await bcrypt.hash(
+      tokens.refreshToken,
+      SALT_ROUNDS,
+    );
     await this.usersService.update(user.id, {
       refreshToken: hashedRefreshToken,
     });
-    return {
-      accessToken,
-      refreshToken,
-      expiresAccessToken,
-      expiresRefreshToken,
-    };
+    return tokens;
   }
 
   async logout(id: string) {

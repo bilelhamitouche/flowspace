@@ -10,24 +10,24 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
+import { LocalAuthGuard } from './guards/local.guard';
 import { RegisterDto } from './dto/register.dto';
-import * as schema from '../database/schema';
 import type { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
-import { CurrentUser } from 'src/common/decorators/current-user-decorator';
 import { JwtAuthGuard } from './guards/jwt.guard';
-import { LocalAuthGuard } from './guards/local.guard';
 import { JwtRefreshAuthGuard } from './guards/jwt-refresh.guard';
+import * as schema from '../database/schema';
+import { CurrentUser } from 'src/common/decorators/current-user.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(
-    private authService: AuthService,
-    private configService: ConfigService,
+    private readonly configService: ConfigService,
+    private readonly authService: AuthService,
   ) {}
 
-  @Post('register')
   @HttpCode(HttpStatus.CREATED)
+  @Post('register')
   async register(
     @Body() registerDto: RegisterDto,
     @Res({ passthrough: true }) response: Response,
@@ -51,8 +51,8 @@ export class AuthController {
   }
 
   @UseGuards(LocalAuthGuard)
-  @Post('login')
   @HttpCode(HttpStatus.CREATED)
+  @Post('login')
   async login(
     @CurrentUser() user: typeof schema.users.$inferSelect,
     @Res({ passthrough: true }) response: Response,
@@ -76,21 +76,30 @@ export class AuthController {
   }
 
   @UseGuards(JwtRefreshAuthGuard)
+  @HttpCode(HttpStatus.OK)
   @Post('logout')
-  @HttpCode(HttpStatus.CREATED)
   async logout(
     @CurrentUser() user: typeof schema.users.$inferSelect,
     @Res({ passthrough: true }) response: Response,
   ) {
+    const isProd = this.configService.get('NODE_ENV') === 'production';
     await this.authService.logout(user.id);
-    response.clearCookie('Authentication');
-    response.clearCookie('Refresh');
+    response.clearCookie('Authentication', {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
+    });
+    response.clearCookie('Refresh', {
+      httpOnly: true,
+      secure: isProd,
+      sameSite: isProd ? 'none' : 'lax',
+    });
   }
 
   @UseGuards(JwtRefreshAuthGuard)
-  @Post('refresh')
   @HttpCode(HttpStatus.CREATED)
-  async refreshToken(
+  @Post('refresh')
+  async refresh(
     @CurrentUser() user: typeof schema.users.$inferSelect,
     @Res({ passthrough: true }) response: Response,
   ) {
@@ -113,10 +122,12 @@ export class AuthController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Get('me')
   @HttpCode(HttpStatus.OK)
-  async getCurrentUser(@CurrentUser() user: typeof schema.users.$inferSelect) {
-    if (!user) throw new UnauthorizedException();
+  @Get('me')
+  async user(@CurrentUser() user: typeof schema.users.$inferSelect) {
+    if (!user) {
+      throw new UnauthorizedException();
+    }
     const { password, refreshToken, ...safeUser } = user;
     return safeUser;
   }
